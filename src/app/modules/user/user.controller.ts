@@ -6,9 +6,11 @@ import sendResponse from "../../utils/sendResponse";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const user = await userServices.createUserService(req.body);
-  res.status(httpStatus.CREATED).json({
-    message: "User create Successfully",
-    user,
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "User create sucessfully",
+    data: user,
   });
 });
 
@@ -16,10 +18,10 @@ export default catchAsync;
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const users = await userServices.getAllUsers();
-  
+
   sendResponse(res, {
+    statusCode: httpStatus.OK,
     success: true,
-    statusCode: httpStatus.CREATED,
     message: "All users retrived successfully",
     data: users,
   });
