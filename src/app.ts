@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import router from "./app/routes";
 import cors, { CorsOptions } from "cors";
+import globalErrorHandler from "./app/middlewares/globalErrorHandler";
+
 const app = express();
 
 const whitelist = ["http://example1.com", "http://example2.com"];
@@ -28,5 +30,8 @@ app.get("/", (req: Request, res: Response) => {
     message: "Tour Management server running",
   });
 });
+
+// Error Handler
+app.use(globalErrorHandler);
 
 export default app;
