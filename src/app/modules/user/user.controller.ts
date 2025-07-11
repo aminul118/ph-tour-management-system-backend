@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 
+
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const user = await userServices.createUserService(req.body);
   sendResponse(res, {
@@ -14,7 +15,18 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export default catchAsync;
+const updateUser = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.id;
+  const verifiedToken = req.user;
+
+  const user = await userServices.updateUser(userId, req.body, verifiedToken);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "User create successfully",
+    data: user,
+  });
+});
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const users = await userServices.getAllUsers();
@@ -29,5 +41,6 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 
 export const UserControllers = {
   createUser,
+  updateUser,
   getAllUsers,
 };
