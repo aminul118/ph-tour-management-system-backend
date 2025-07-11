@@ -28,6 +28,7 @@ app.use("/api/v1", router);
 // Testing api
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
+    status: 200,
     message: "Tour Management server running",
   });
 });
