@@ -1,0 +1,132 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import passport from "passport";
+import {
+  Strategy as GoogleStrategy,
+  Profile,
+  StrategyOptions as GoogleStrategyOptions,
+  VerifyCallback as GoogleVerifyCallback,
+} from "passport-google-oauth20";
+
+import {
+  Strategy as LocalStrategy,
+  IStrategyOptionsWithRequest,
+  VerifyFunctionWithRequest,
+} from "passport-local";
+
+import bcrypt from "bcryptjs";
+import envVars from "./env";
+import { User } from "../modules/user/user.model";
+import { Role } from "../modules/user/user.interface";
+
+// ----------------------------
+// Local Strategy (email/password)
+// ----------------------------
+
+const localStrategyOptions: IStrategyOptionsWithRequest = {
+  usernameField: "email",
+  passwordField: "password",
+  passReqToCallback: true,
+};
+
+const localVerifyFunction: VerifyFunctionWithRequest = async (
+  req,
+  email,
+  password,
+  done
+) => {
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return done(null, false, { message: "User doesn't exist" });
+    }
+
+    const isPasswordMatched = await bcrypt.compare(
+      password,
+      user.password as string
+    );
+
+    if (!isPasswordMatched) {
+      return done(null, false, { message: "Incorrect password" });
+    }
+
+    return done(null, user);
+  } catch (error) {
+    console.error("Local strategy error:", error);
+    return done(error);
+  }
+};
+
+passport.use(new LocalStrategy(localStrategyOptions, localVerifyFunction));
+
+// ----------------------------
+// Google OAuth Strategy
+// ----------------------------
+
+const googleStrategyOptions: GoogleStrategyOptions = {
+  clientID: envVars.GOOGLE_CLIENT_ID,
+  clientSecret: envVars.GOOGLE_CLIENT_SECRET,
+  callbackURL: envVars.GOOGLE_CALLBACK_URL,
+};
+
+const googleVerifyFunction = async (
+  accessToken: string,
+  refreshToken: string,
+  profile: Profile,
+  done: GoogleVerifyCallback
+) => {
+  try {
+    const email = profile.emails?.[0]?.value;
+
+    if (!email) {
+      return done(null, false, { message: "No email found" });
+    }
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = await User.create({
+        email,
+        name: profile.displayName,
+        picture: profile.photos?.[0]?.value,
+        role: Role.USER,
+        isVerified: true,
+        auths: [
+          {
+            provider: "google",
+            providerId: profile.id,
+          },
+        ],
+      });
+    }
+
+    return done(null, user);
+  } catch (error) {
+    console.error("Google strategy error:", error);
+    return done(error);
+  }
+};
+
+passport.use(new GoogleStrategy(googleStrategyOptions, googleVerifyFunction));
+
+// ----------------------------
+// Session Handling
+// ----------------------------
+
+passport.serializeUser((user: any, done: (err: any, id?: unknown) => void) => {
+  done(null, user._id);
+});
+
+passport.deserializeUser(
+  async (id: string, done: (err: any, user?: any) => void) => {
+    try {
+      const user = await User.findById(id);
+      done(null, user);
+    } catch (error) {
+      console.error("Deserialize error:", error);
+      done(error);
+    }
+  }
+);
+
+export default passport;
