@@ -17,17 +17,20 @@ router.post(
 
 router.get(
   "/google",
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate("google", { scope: ["profile", "email"] })(req, res);
+    const redirect = req.query.redirect || "/";
+    passport.authenticate("google", {
+      scope: ["profile", "email"],
+      state: redirect as string,
+    })(req, res, next);
   }
 );
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" })
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  AuthController.googleCallbackController
 );
 
-router.get("/auth/google/callback", AuthController.googleCallbackController);
 const AuthRouter = router;
 export default AuthRouter;

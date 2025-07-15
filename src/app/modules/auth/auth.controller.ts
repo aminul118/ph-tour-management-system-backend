@@ -5,9 +5,9 @@ import { AuthServices } from "./auth.service";
 import catchAsync from "../../utils/catchAsync";
 import AppError from "../../errorHelpers/AppError";
 import { setAuthCookie } from "../../utils/setCookie";
-import { createUserToken } from "../../utils/userTokens";
 import envVars from "../../config/env";
 import { JwtPayload } from "jsonwebtoken";
+import { createUserToken } from "../../utils/userTokens";
 
 const credentialsLogin = catchAsync(async (req: Request, res: Response) => {
   const loginInfo = await AuthServices.credentialsLogin(req.body);
@@ -85,13 +85,23 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
 
 const googleCallbackController = catchAsync(
   async (req: Request, res: Response) => {
-    const user = req.user;
-    if (!user) {
-      throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    let redirectTo = req.query.state ? (req.query.state as string) : "";
+
+    if (redirectTo.startsWith("/")) {
+      redirectTo = redirectTo.slice(1);
     }
+
+    const user = req.user;
+
+    if (!user) {
+      throw new AppError(httpStatus.NOT_FOUND, "User Not Found");
+    }
+
     const tokenInfo = createUserToken(user);
+
     setAuthCookie(res, tokenInfo);
-    res.redirect(envVars.FRONTEND_URL);
+
+    res.redirect(`${envVars.FRONTEND_URL}/${redirectTo}`);
   }
 );
 
