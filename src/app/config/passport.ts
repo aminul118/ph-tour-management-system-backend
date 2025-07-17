@@ -38,7 +38,17 @@ const localVerifyFunction: VerifyFunctionWithRequest = async (
     const user = await User.findOne({ email });
 
     if (!user) {
-      return done(null, false, { message: "User doesn't exist" });
+      return done("User doesn't exist");
+    }
+
+    const isGoogleAuthenticate: boolean = user.auths.some((providerObj) => {
+      return providerObj.provider === "google";
+    });
+
+    if (isGoogleAuthenticate && !user.password) {
+      return done(
+        "You have authenticated through Google. So if you want to login with credentials, then at first login with google and set a password for your Gmail and then you can login with email and password"
+      );
     }
 
     const isPasswordMatched = await bcrypt.compare(
@@ -47,7 +57,7 @@ const localVerifyFunction: VerifyFunctionWithRequest = async (
     );
 
     if (!isPasswordMatched) {
-      return done(null, false, { message: "Incorrect password" });
+      return done("Incorrect password");
     }
 
     return done(null, user);
@@ -57,12 +67,12 @@ const localVerifyFunction: VerifyFunctionWithRequest = async (
   }
 };
 
+// Using  local strategy middleware
 passport.use(new LocalStrategy(localStrategyOptions, localVerifyFunction));
 
 // ----------------------------
 // Google OAuth Strategy
 // ----------------------------
-
 const googleStrategyOptions: GoogleStrategyOptions = {
   clientID: envVars.GOOGLE_CLIENT_ID,
   clientSecret: envVars.GOOGLE_CLIENT_SECRET,
@@ -79,7 +89,7 @@ const googleVerifyFunction = async (
     const email = profile.emails?.[0]?.value;
 
     if (!email) {
-      return done(null, false, { message: "No email found" });
+      return done("No email found");
     }
 
     let user = await User.findOne({ email });
@@ -107,6 +117,7 @@ const googleVerifyFunction = async (
   }
 };
 
+// Using google strategy middleware
 passport.use(new GoogleStrategy(googleStrategyOptions, googleVerifyFunction));
 
 // ----------------------------
