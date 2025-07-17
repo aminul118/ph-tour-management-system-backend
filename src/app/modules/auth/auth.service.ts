@@ -1,51 +1,10 @@
 import AppError from "../../errorHelpers/AppError";
-import { IUser } from "../user/user.interface";
 import { User } from "../user/user.model";
 import httpStatus from "http-status-codes";
 import bcryptjs from "bcryptjs";
-import {
-  createNewAccessTokenWithRefreshToken,
-  createUserToken,
-} from "../../utils/userTokens";
+import { createNewAccessTokenWithRefreshToken } from "../../utils/userTokens";
 import { JwtPayload } from "jsonwebtoken";
 import envVars from "../../config/env";
-
-const credentialsLogin = async (payload: Partial<IUser>) => {
-  const { email, password } = payload;
-
-  if (!email || !password) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "Email and password are required"
-    );
-  }
-
-  const isUserExist = await User.findOne({ email });
-
-  if (!isUserExist) {
-    throw new AppError(httpStatus.BAD_REQUEST, "User doesn't exist");
-  }
-
-  const isPasswordMatch = await bcryptjs.compare(
-    password,
-    isUserExist.password as string
-  );
-
-  if (!isPasswordMatch) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Incorrect password");
-  }
-
-  const userToken = createUserToken(isUserExist.toObject());
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { password: _, ...userWithoutPassword } = isUserExist.toObject();
-
-  return {
-    accessToken: userToken.accessToken,
-    refreshToken: userToken.refreshToken,
-    user: userWithoutPassword,
-  };
-};
 
 const getNewAccessToken = async (refreshToken: string) => {
   return await createNewAccessTokenWithRefreshToken(refreshToken);
@@ -76,7 +35,6 @@ const resetPassword = async (
 };
 
 export const AuthServices = {
-  credentialsLogin,
   getNewAccessToken,
   resetPassword,
 };
