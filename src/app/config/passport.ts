@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import passport from "passport";
 import {
@@ -62,13 +63,12 @@ const localVerifyFunction: VerifyFunctionWithRequest = async (
 
     return done(null, user);
   } catch (error) {
-    console.error("Local strategy error:", error);
+    if (envVars.NODE_ENV === "development") {
+      console.log(error);
+    }
     return done(error);
   }
 };
-
-// Using  local strategy middleware
-passport.use(new LocalStrategy(localStrategyOptions, localVerifyFunction));
 
 // ----------------------------
 // Google OAuth Strategy
@@ -117,6 +117,8 @@ const googleVerifyFunction = async (
   }
 };
 
+// Using  local strategy middleware
+passport.use(new LocalStrategy(localStrategyOptions, localVerifyFunction));
 // Using google strategy middleware
 passport.use(new GoogleStrategy(googleStrategyOptions, googleVerifyFunction));
 
@@ -134,7 +136,9 @@ passport.deserializeUser(
       const user = await User.findById(id);
       done(null, user);
     } catch (error) {
-      console.error("Deserialize error:", error);
+      if (envVars.NODE_ENV === "development") {
+        console.log("Deserialize", error);
+      }
       done(error);
     }
   }

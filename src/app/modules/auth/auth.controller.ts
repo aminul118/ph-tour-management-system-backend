@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from "http-status-codes";
 import { NextFunction, Request, Response } from "express";
@@ -13,23 +14,25 @@ import passport from "passport";
 
 const credentialsLogin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate("local", async (err: any, user: any) => {
+    passport.authenticate("local", async (err: any, user: any, info: any) => {
       if (err) {
         return next(new AppError(httpStatus.UNAUTHORIZED, err));
       }
 
+      if (!user) {
+        return next(new AppError(httpStatus.UNAUTHORIZED, info.message));
+      }
+
       const userTokens = await createUserToken(user);
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password: pass, rest } = user.toObject();
+      const { password: pass, ...rest } = user.toObject();
 
       setAuthCookie(res, userTokens);
 
-      res.redirect("/account");
       sendResponse(res, {
-        statusCode: httpStatus.OK,
         success: true,
-        message: "User logged In successfully",
+        statusCode: httpStatus.OK,
+        message: "User Logged In Successfully",
         data: {
           accessToken: userTokens.accessToken,
           refreshToken: userTokens.refreshToken,
