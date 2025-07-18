@@ -23,8 +23,8 @@ const getSingleDivision = async (slug: string) => {
 
 const updateDivision = async (id: string, payload: Partial<IDivision>) => {
   const existingDivision = await Division.findById(id);
-  if (existingDivision) {
-    throw new Error("A division with this name already exists.");
+  if (!existingDivision) {
+    throw new Error("Division not found");
   }
 
   const updatedDivision = await Division.findByIdAndUpdate(id, payload, {
