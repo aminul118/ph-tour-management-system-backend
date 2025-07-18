@@ -35,6 +35,10 @@ const getAllTours = async (query: Record<string, string>) => {
   };
 };
 
+const getATour = async (slug: string) => {
+  return await Tour.findOne({ slug: slug });
+};
+
 const getAllTourTypes = async () => {
   const tours = await Tour.find();
   return tours;
@@ -67,6 +71,7 @@ export const tourService = {
   updateTourType,
   getAllTourTypes,
   getAllTours,
+  getATour,
   updateTour,
   deleteTour,
 };
