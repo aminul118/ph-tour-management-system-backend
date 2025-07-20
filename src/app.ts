@@ -13,7 +13,11 @@ const app = express();
 
 // Cors configurations
 
-const whitelist = ["http://localhost:5000", "http://localhost:5173"];
+const whitelist = [
+  "http://localhost:5000",
+  "http://localhost:5173",
+  "https://sandbox.sslcommerz.com",
+];
 
 const corsOptions: CorsOptions = {
   origin: (origin, callback) => {

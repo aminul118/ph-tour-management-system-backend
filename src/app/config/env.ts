@@ -19,6 +19,18 @@ interface EnvConfig {
   GOOGLE_CALLBACK_URL: string;
   EXPRESS_SESSION_SECRET: string;
   FRONTEND_URL: string;
+  SSL: {
+    SSL_STORE_ID: string;
+    SSL_STORE_PASS: string;
+    SSL_PAYMENT_API: string;
+    SSL_VALIDATION_API: string;
+    SSL_SUCCESS_BACKEND_URL: string;
+    SSL_FAIL_BACKEND_URL: string;
+    SSL_CANCEL_BACKEND_URL: string;
+    SSL_SUCCESS_FRONTEND_URL: string;
+    SSL_FAIL_FRONTEND_URL: string;
+    SSL_CANCEL_FRONTEND_URL: string;
+  };
 }
 
 const getEnv = (key: string): string => {
@@ -44,6 +56,18 @@ const loadEnvVariables = (): EnvConfig => {
     GOOGLE_CALLBACK_URL: getEnv("GOOGLE_CALLBACK_URL"),
     EXPRESS_SESSION_SECRET: getEnv("EXPRESS_SESSION_SECRET"),
     FRONTEND_URL: getEnv("FRONTEND_URL"),
+    SSL: {
+      SSL_STORE_ID: getEnv("SSL_STORE_ID"),
+      SSL_STORE_PASS: getEnv("SSL_STORE_PASS"),
+      SSL_PAYMENT_API: getEnv("SSL_PAYMENT_API"),
+      SSL_VALIDATION_API: getEnv("SSL_VALIDATION_API"),
+      SSL_SUCCESS_BACKEND_URL: getEnv("SSL_SUCCESS_BACKEND_URL"),
+      SSL_FAIL_BACKEND_URL: getEnv("SSL_FAIL_BACKEND_URL"),
+      SSL_CANCEL_BACKEND_URL: getEnv("SSL_CANCEL_BACKEND_URL"),
+      SSL_SUCCESS_FRONTEND_URL: getEnv("SSL_SUCCESS_FRONTEND_URL"),
+      SSL_FAIL_FRONTEND_URL: getEnv("SSL_FAIL_FRONTEND_URL"),
+      SSL_CANCEL_FRONTEND_URL: getEnv("SSL_CANCEL_FRONTEND_URL"),
+    },
   };
 };
 
