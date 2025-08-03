@@ -6,7 +6,11 @@ import sendResponse from "../../utils/sendResponse";
 import { JwtPayload } from "jsonwebtoken";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
-  const user = await userServices.createUserService(req.body);
+  const payload = {
+    ...req.body,
+    picture: req.file?.path,
+  };
+  const user = await userServices.createUserService(payload);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
@@ -16,12 +20,17 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateUser = catchAsync(async (req: Request, res: Response) => {
+  const payload = {
+    ...req.body,
+    picture: req.file?.path,
+  };
+
   const userId = req.params.id;
   const verifiedToken = req.user;
 
   const user = await userServices.updateUser(
     userId,
-    req.body,
+    payload,
     verifiedToken as JwtPayload
   );
   sendResponse(res, {

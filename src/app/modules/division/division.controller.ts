@@ -3,14 +3,20 @@ import catchAsync from "../../utils/catchAsync";
 import { divisionServices } from "./division.service";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status-codes";
+import { IDivision } from "./division.interface";
 
 const createDivision = catchAsync(async (req: Request, res: Response) => {
-  const result = await divisionServices.createDivision(req.body);
+  const payload: IDivision = {
+    ...req.body,
+    thumbnail: req.file?.path,
+  };
+  console.log(payload);
+  const data = await divisionServices.createDivision(payload);
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: 201,
     success: true,
     message: "Division created",
-    data: result,
+    data,
   });
 });
 
@@ -36,9 +42,14 @@ const getSingleDivision = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateDivision = catchAsync(async (req: Request, res: Response) => {
+  const payload = {
+    ...req.body,
+    thumbnail: req.file?.path,
+  };
+
   const id = req.params.id;
 
-  const result = await divisionServices.updateDivision(id, req.body);
+  const result = await divisionServices.updateDivision(id, payload);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

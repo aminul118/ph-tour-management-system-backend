@@ -4,24 +4,29 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status-codes";
 import { tourService } from "./tour.service";
+import { ITour } from "./tour.interface";
 
 const createTour = catchAsync(async (req: Request, res: Response) => {
-  const result = await tourService.createTour(req.body);
+  const payload: ITour = {
+    ...req.body,
+    images: (req.files as Express.Multer.File[]).map((file) => file.path),
+  };
+  const data = await tourService.createTour(payload);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
     message: "Tour created",
-    data: result,
+    data,
   });
 });
 
 const createTourType = catchAsync(async (req: Request, res: Response) => {
-  const result = await tourService.createTourType(req.body);
+  const data = await tourService.createTourType(req.body);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
     message: "Tour type created",
-    data: result,
+    data,
   });
 });
 
@@ -59,8 +64,12 @@ const getAllTourTypes = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateTour = catchAsync(async (req: Request, res: Response) => {
+  const payload: ITour = {
+    ...req.body,
+    images: (req.files as Express.Multer.File[]).map((file) => file.path),
+  };
   const id = req.params.id;
-  const result = await tourService.updateTour(id, req.body);
+  const result = await tourService.updateTour(id, payload);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,

@@ -31,11 +31,25 @@ interface EnvConfig {
     SSL_FAIL_FRONTEND_URL: string;
     SSL_CANCEL_FRONTEND_URL: string;
   };
+  CLOUDINARY: {
+    CLOUDINARY_NAME: string;
+    CLOUDINARY_API_KEY: string;
+    CLOUDINARY_API_SECRET: string;
+  };
+  EMAIL_SENDER: {
+    SMTP_HOST: string;
+    SMTP_PORT: number;
+    SMTP_USER: string;
+    SMTP_PASS: string;
+    SMTP_FORM: string;
+  };
 }
 
 const getEnv = (key: string): string => {
   const value = process.env[key];
-  if (!value) throw new Error(`Missing required environment variable: ${key}`);
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${key}`);
+  }
   return value;
 };
 
@@ -67,6 +81,18 @@ const loadEnvVariables = (): EnvConfig => {
       SSL_SUCCESS_FRONTEND_URL: getEnv("SSL_SUCCESS_FRONTEND_URL"),
       SSL_FAIL_FRONTEND_URL: getEnv("SSL_FAIL_FRONTEND_URL"),
       SSL_CANCEL_FRONTEND_URL: getEnv("SSL_CANCEL_FRONTEND_URL"),
+    },
+    CLOUDINARY: {
+      CLOUDINARY_NAME: getEnv("CLOUDINARY_NAME"),
+      CLOUDINARY_API_KEY: getEnv("CLOUDINARY_API_KEY"),
+      CLOUDINARY_API_SECRET: getEnv("CLOUDINARY_API_SECRET"),
+    },
+    EMAIL_SENDER: {
+      SMTP_HOST: getEnv("SMTP_HOST"),
+      SMTP_PORT: Number(getEnv("SMTP_PORT")),
+      SMTP_USER: getEnv("SMTP_USER"),
+      SMTP_PASS: getEnv("SMTP_PASS"),
+      SMTP_FORM: getEnv("SMTP_FORM"),
     },
   };
 };
