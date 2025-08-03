@@ -43,6 +43,12 @@ interface EnvConfig {
     SMTP_PASS: string;
     SMTP_FORM: string;
   };
+  REDIS: {
+    REDIS_HOST: string;
+    REDIS_PORT: number;
+    REDIS_USERNAME: string;
+    REDIS_PASSWORD: string;
+  };
 }
 
 const getEnv = (key: string): string => {
@@ -93,6 +99,12 @@ const loadEnvVariables = (): EnvConfig => {
       SMTP_USER: getEnv('SMTP_USER'),
       SMTP_PASS: getEnv('SMTP_PASS'),
       SMTP_FORM: getEnv('SMTP_FORM'),
+    },
+    REDIS: {
+      REDIS_HOST: getEnv('REDIS_HOST'),
+      REDIS_PORT: Number(getEnv('REDIS_PORT')),
+      REDIS_USERNAME: getEnv('REDIS_USERNAME'),
+      REDIS_PASSWORD: getEnv('REDIS_PASSWORD'),
     },
   };
 };

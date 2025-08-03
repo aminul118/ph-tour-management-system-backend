@@ -5,38 +5,48 @@ import divisionRouter from '../modules/division/division.route';
 import tourRouter from '../modules/tour/tour.route';
 import bookingRoute from '../modules/booking/booking.route';
 import paymentRoute from '../modules/payment/payment.route';
+import { OTPRouter } from '../modules/otp/otp.route';
 
 const router = Router();
 
-const moduleRoutes = [
+interface IModuleRoutes {
+  path: string;
+  element: Router;
+}
+
+const moduleRoutes: IModuleRoutes[] = [
   {
-    path: '/user',
-    route: UserRoutes,
+    path: 'user',
+    element: UserRoutes,
   },
   {
-    path: '/auth',
-    route: AuthRouter,
+    path: 'auth',
+    element: AuthRouter,
   },
   {
-    path: '/division',
-    route: divisionRouter,
+    path: 'division',
+    element: divisionRouter,
   },
   {
-    path: '/tour',
-    route: tourRouter,
+    path: 'tour',
+    element: tourRouter,
   },
   {
-    path: '/booking',
-    route: bookingRoute,
+    path: 'booking',
+    element: bookingRoute,
   },
   {
-    path: '/payment',
-    route: paymentRoute,
+    path: 'payment',
+    element: paymentRoute,
+  },
+  {
+    path: 'otp',
+    element: OTPRouter,
   },
 ];
 
 moduleRoutes.forEach((r) => {
-  router.use(r.path, r.route);
+  router.use(`/${r.path}`, r.element);
 });
 
 export default router;

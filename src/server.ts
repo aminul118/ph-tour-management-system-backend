@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import app from './app';
 import envVars from './app/config/env';
 import { seedSupperAdmin } from './app/utils/seedSuperAdmin';
+import { connectRedis } from './app/config/redis.config';
 
 let server: Server;
 
@@ -21,6 +22,7 @@ const startServer = async () => {
 };
 
 (async () => {
+  await connectRedis();
   await startServer();
   await seedSupperAdmin();
 })();
@@ -72,15 +74,3 @@ process.on('uncaughtException', (err) => {
 
   process.exit(1);
 });
-
-// Unhandier rejection error
-// Promise.reject(new Error("I forgot to catch this promise"))
-
-// Uncaught Exception Error
-// throw new Error("I forgot to handle this local error")
-
-/**
- * unhandled rejection error
- * uncaught rejection error
- * signal termination sigterm
- */
