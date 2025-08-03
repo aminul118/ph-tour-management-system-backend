@@ -1,11 +1,11 @@
-import { model, Schema } from "mongoose";
-import { IPayment, PaymentStatus } from "./payment.interface";
+import { model, Schema } from 'mongoose';
+import { IPayment, PaymentStatus } from './payment.interface';
 
 const paymentSchema = new Schema<IPayment>(
   {
     booking: {
       type: Schema.ObjectId,
-      ref: "Booking",
+      ref: 'Booking',
       required: true,
       unique: true,
     },
@@ -33,9 +33,9 @@ const paymentSchema = new Schema<IPayment>(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
-const Payment = model<IPayment>("Payment", paymentSchema);
+const Payment = model<IPayment>('Payment', paymentSchema);
 
 export { Payment };

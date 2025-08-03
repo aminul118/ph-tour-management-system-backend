@@ -1,5 +1,5 @@
-import { model, Schema } from "mongoose";
-import { ITour, ITourType } from "./tour.interface";
+import { model, Schema } from 'mongoose';
+import { ITour, ITourType } from './tour.interface';
 
 const tourTypeSchema = new Schema<ITourType>(
   {
@@ -12,10 +12,10 @@ const tourTypeSchema = new Schema<ITourType>(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
-export const TourType = model<ITourType>("TourType", tourTypeSchema);
+export const TourType = model<ITourType>('TourType', tourTypeSchema);
 
 const tourSchema = new Schema<ITour>(
   {
@@ -77,24 +77,24 @@ const tourSchema = new Schema<ITour>(
     },
     division: {
       type: Schema.Types.ObjectId,
-      ref: "Division",
+      ref: 'Division',
       required: true,
     },
     tourType: {
       type: Schema.Types.ObjectId,
-      ref: "TourType",
+      ref: 'TourType',
       required: true,
     },
   },
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
-tourSchema.pre("save", async function (next) {
-  if (this.isModified("title")) {
-    const baseSlug = this.title.toLocaleLowerCase().split(" ").join("-");
+tourSchema.pre('save', async function (next) {
+  if (this.isModified('title')) {
+    const baseSlug = this.title.toLocaleLowerCase().split(' ').join('-');
     let slug = baseSlug;
     let counter = 0;
     while (await Tour.exists({ slug })) {
@@ -105,10 +105,10 @@ tourSchema.pre("save", async function (next) {
   next();
 });
 
-tourSchema.pre("findOneAndUpdate", async function (next) {
+tourSchema.pre('findOneAndUpdate', async function (next) {
   const tour = this.getUpdate() as Partial<ITour>;
   if (tour.title) {
-    const baseSlug = tour.title.toLocaleLowerCase().split(" ").join("-");
+    const baseSlug = tour.title.toLocaleLowerCase().split(' ').join('-');
 
     let slug = baseSlug;
     let counter = 0;
@@ -122,4 +122,4 @@ tourSchema.pre("findOneAndUpdate", async function (next) {
   next();
 });
 
-export const Tour = model<ITour>("Tour", tourSchema);
+export const Tour = model<ITour>('Tour', tourSchema);

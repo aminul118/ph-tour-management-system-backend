@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
-import catchAsync from "../../utils/catchAsync";
-import { divisionServices } from "./division.service";
-import sendResponse from "../../utils/sendResponse";
-import httpStatus from "http-status-codes";
-import { IDivision } from "./division.interface";
+import { Request, Response } from 'express';
+import catchAsync from '../../utils/catchAsync';
+import { divisionServices } from './division.service';
+import sendResponse from '../../utils/sendResponse';
+import httpStatus from 'http-status-codes';
+import { IDivision } from './division.interface';
 
 const createDivision = catchAsync(async (req: Request, res: Response) => {
   const payload: IDivision = {
@@ -15,7 +15,7 @@ const createDivision = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 201,
     success: true,
-    message: "Division created",
+    message: 'Division created',
     data,
   });
 });
@@ -25,7 +25,7 @@ const getAllDivisions = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: "Division created",
+    message: 'Division created',
     data: result,
   });
 });
@@ -36,7 +36,7 @@ const getSingleDivision = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: "Division created",
+    message: 'Division created',
     data: result,
   });
 });
@@ -53,7 +53,7 @@ const updateDivision = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Division updated",
+    message: 'Division updated',
     data: result,
   });
 });
@@ -63,7 +63,7 @@ const deleteDivision = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Division deleted",
+    message: 'Division deleted',
     data: result,
   });
 });

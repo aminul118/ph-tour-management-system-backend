@@ -1,20 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import AppError from "../../errorHelpers/AppError";
-import { BookingStatus } from "../booking/booking.interface";
-import { Booking } from "../booking/booking.model";
-import { ISSLCommerz } from "../sslCommerz/sslCommerz.interface";
-import { sslService } from "../sslCommerz/sslCommerz.service";
-import { PaymentStatus } from "./payment.interface";
-import { Payment } from "./payment.model";
-import httpStatus from "http-status-codes";
+import AppError from '../../errorHelpers/AppError';
+import { BookingStatus } from '../booking/booking.interface';
+import { Booking } from '../booking/booking.model';
+import { ISSLCommerz } from '../sslCommerz/sslCommerz.interface';
+import { sslService } from '../sslCommerz/sslCommerz.service';
+import { PaymentStatus } from './payment.interface';
+import { Payment } from './payment.model';
+import httpStatus from 'http-status-codes';
 
 const initPayment = async (bookingId: string) => {
   const payment = await Payment.findOne({ booking: bookingId });
   if (!payment) {
-    throw new AppError(
-      httpStatus.NOT_FOUND,
-      "Payment not found. You have not booked this tour"
-    );
+    throw new AppError(httpStatus.NOT_FOUND, 'Payment not found. You have not booked this tour');
   }
 
   const booking = await Booking.findById(payment.booking);
@@ -40,7 +37,6 @@ const initPayment = async (bookingId: string) => {
   };
 };
 
-
 const successPayment = async (query: Record<string, string>) => {
   // Update Booking Status to COnfirm
   // Update Payment Status to PAID
@@ -54,18 +50,18 @@ const successPayment = async (query: Record<string, string>) => {
       {
         status: PaymentStatus.PAID,
       },
-      { new: true, runValidators: true, session: session }
+      { new: true, runValidators: true, session: session },
     );
 
     await Booking.findByIdAndUpdate(
       updatedPayment?.booking,
       { status: BookingStatus.COMPLETE },
-      { runValidators: true, session }
+      { runValidators: true, session },
     );
 
     await session.commitTransaction(); //transaction
     session.endSession();
-    return { success: true, message: "Payment Completed Successfully" };
+    return { success: true, message: 'Payment Completed Successfully' };
   } catch (error) {
     await session.abortTransaction(); // rollback
     session.endSession();
@@ -73,7 +69,6 @@ const successPayment = async (query: Record<string, string>) => {
     throw error;
   }
 };
-
 
 const failPayment = async (query: Record<string, string>) => {
   // Update Booking Status to FAIL
@@ -88,18 +83,18 @@ const failPayment = async (query: Record<string, string>) => {
       {
         status: PaymentStatus.FAILED,
       },
-      { new: true, runValidators: true, session: session }
+      { new: true, runValidators: true, session: session },
     );
 
     await Booking.findByIdAndUpdate(
       updatedPayment?.booking,
       { status: BookingStatus.FAILED },
-      { runValidators: true, session }
+      { runValidators: true, session },
     );
 
     await session.commitTransaction(); //transaction
     session.endSession();
-    return { success: false, message: "Payment Failed" };
+    return { success: false, message: 'Payment Failed' };
   } catch (error) {
     await session.abortTransaction(); // rollback
     session.endSession();
@@ -121,18 +116,18 @@ const cancelPayment = async (query: Record<string, string>) => {
       {
         status: PaymentStatus.CANCELLED,
       },
-      { runValidators: true, session: session }
+      { runValidators: true, session: session },
     );
 
     await Booking.findByIdAndUpdate(
       updatedPayment?.booking,
       { status: BookingStatus.CANCEL },
-      { runValidators: true, session }
+      { runValidators: true, session },
     );
 
     await session.commitTransaction(); //transaction
     session.endSession();
-    return { success: false, message: "Payment Cancelled" };
+    return { success: false, message: 'Payment Cancelled' };
   } catch (error) {
     await session.abortTransaction(); // rollback
     session.endSession();

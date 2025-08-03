@@ -1,36 +1,36 @@
-import { Router } from "express";
-import { UserRoutes } from "../modules/user/user.routes";
-import AuthRouter from "../modules/auth/auth.route";
-import divisionRouter from "../modules/division/division.route";
-import tourRouter from "../modules/tour/tour.route";
-import bookingRoute from "../modules/booking/booking.route";
-import paymentRoute from "../modules/payment/payment.route";
+import { Router } from 'express';
+import { UserRoutes } from '../modules/user/user.routes';
+import AuthRouter from '../modules/auth/auth.route';
+import divisionRouter from '../modules/division/division.route';
+import tourRouter from '../modules/tour/tour.route';
+import bookingRoute from '../modules/booking/booking.route';
+import paymentRoute from '../modules/payment/payment.route';
 
 const router = Router();
 
 const moduleRoutes = [
   {
-    path: "/user",
+    path: '/user',
     route: UserRoutes,
   },
   {
-    path: "/auth",
+    path: '/auth',
     route: AuthRouter,
   },
   {
-    path: "/division",
+    path: '/division',
     route: divisionRouter,
   },
   {
-    path: "/tour",
+    path: '/tour',
     route: tourRouter,
   },
   {
-    path: "/booking",
+    path: '/booking',
     route: bookingRoute,
   },
   {
-    path: "/payment",
+    path: '/payment',
     route: paymentRoute,
   },
 ];

@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { BookingStatus } from "./booking.interface";
+import { z } from 'zod';
+import { BookingStatus } from './booking.interface';
 
 export const createBookingZodSchema = z.object({
   tour: z.string(),

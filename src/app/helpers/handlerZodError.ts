@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  TErrorSources,
-  TGenericErrorResponse,
-} from "../interfaces/error.types";
+import { TErrorSources, TGenericErrorResponse } from '../interfaces/error.types';
 
 export const handlerZodError = (err: any): TGenericErrorResponse => {
   const errorSources: TErrorSources[] = [];
@@ -19,7 +16,7 @@ export const handlerZodError = (err: any): TGenericErrorResponse => {
 
   return {
     statusCode: 400,
-    message: "Zod Error",
+    message: 'Zod Error',
     errorSources,
   };
 };

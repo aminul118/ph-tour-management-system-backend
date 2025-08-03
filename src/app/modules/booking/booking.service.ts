@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import AppError from "../../errorHelpers/AppError";
-import { getTransactionId } from "../../utils/getTransactionId";
-import { PaymentStatus } from "../payment/payment.interface";
-import { Payment } from "../payment/payment.model";
-import { ISSLCommerz } from "../sslCommerz/sslCommerz.interface";
-import { sslService } from "../sslCommerz/sslCommerz.service";
-import { Tour } from "../tour/tour.model";
-import { User } from "../user/user.model";
-import { BookingStatus, IBooking } from "./booking.interface";
-import { Booking } from "./booking.model";
-import httpStatus from "http-status-codes";
+import AppError from '../../errorHelpers/AppError';
+import { getTransactionId } from '../../utils/getTransactionId';
+import { PaymentStatus } from '../payment/payment.interface';
+import { Payment } from '../payment/payment.model';
+import { ISSLCommerz } from '../sslCommerz/sslCommerz.interface';
+import { sslService } from '../sslCommerz/sslCommerz.service';
+import { Tour } from '../tour/tour.model';
+import { User } from '../user/user.model';
+import { BookingStatus, IBooking } from './booking.interface';
+import { Booking } from './booking.model';
+import httpStatus from 'http-status-codes';
 
 const createBooking = async (payload: Partial<IBooking>, userId: string) => {
   const transactionId = getTransactionId();
@@ -21,15 +21,12 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
     const user = await User.findById(userId);
 
     if (!user?.phone || !user.address) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        "Please update your profile to Book a tour"
-      );
+      throw new AppError(httpStatus.BAD_REQUEST, 'Please update your profile to Book a tour');
     }
 
-    const tour = await Tour.findById(payload.tour).select("costFrom");
+    const tour = await Tour.findById(payload.tour).select('costFrom');
     if (!tour?.costFrom) {
-      throw new AppError(httpStatus.BAD_REQUEST, "No Tour Cost Found!");
+      throw new AppError(httpStatus.BAD_REQUEST, 'No Tour Cost Found!');
     }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -43,7 +40,7 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
           ...payload,
         },
       ],
-      { session }
+      { session },
     );
 
     const payment = await Payment.create(
@@ -55,7 +52,7 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
           amount,
         },
       ],
-      { session }
+      { session },
     );
 
     const updatedBooking = await Booking.findByIdAndUpdate(
@@ -63,11 +60,11 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
       {
         payment: payment[0]._id,
       },
-      { new: true, runValidators: true, session }
+      { new: true, runValidators: true, session },
     )
-      .populate("user", "name email phone address")
-      .populate("tour", "title costFrom")
-      .populate("payment");
+      .populate('user', 'name email phone address')
+      .populate('tour', 'title costFrom')
+      .populate('payment');
 
     const userAddress = (updatedBooking?.user as any).address;
     const userEmail = (updatedBooking?.user as any).email;
@@ -112,10 +109,7 @@ const getUserBookings = async (userId: string) => {
   return await Booking.find({ user: userId });
 };
 
-const updateBookingStatus = async (
-  bookingId: string,
-  payload: Partial<IBooking>
-) => {
+const updateBookingStatus = async (bookingId: string, payload: Partial<IBooking>) => {
   return await Booking.findByIdAndUpdate(bookingId, payload);
 };
 

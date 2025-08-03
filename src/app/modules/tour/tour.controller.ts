@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
-import catchAsync from "../../utils/catchAsync";
+import { Request, Response } from 'express';
+import catchAsync from '../../utils/catchAsync';
 
-import sendResponse from "../../utils/sendResponse";
-import httpStatus from "http-status-codes";
-import { tourService } from "./tour.service";
-import { ITour } from "./tour.interface";
+import sendResponse from '../../utils/sendResponse';
+import httpStatus from 'http-status-codes';
+import { tourService } from './tour.service';
+import { ITour } from './tour.interface';
 
 const createTour = catchAsync(async (req: Request, res: Response) => {
   const payload: ITour = {
@@ -15,7 +15,7 @@ const createTour = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: "Tour created",
+    message: 'Tour created',
     data,
   });
 });
@@ -25,7 +25,7 @@ const createTourType = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: "Tour type created",
+    message: 'Tour type created',
     data,
   });
 });
@@ -36,7 +36,7 @@ const getAllTours = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "All tours retrieved",
+    message: 'All tours retrieved',
     meta: result.meta,
     data: result.data,
   });
@@ -48,7 +48,7 @@ const getATour = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "All tours retrieved",
+    message: 'All tours retrieved',
     data: result,
   });
 });
@@ -58,7 +58,7 @@ const getAllTourTypes = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "All tours type retrieved",
+    message: 'All tours type retrieved',
     data: result,
   });
 });
@@ -73,7 +73,7 @@ const updateTour = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: "Tour Updated",
+    message: 'Tour Updated',
     data: result,
   });
 });
@@ -84,7 +84,7 @@ const updateTourType = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: "Tour type updated",
+    message: 'Tour type updated',
     data: result,
   });
 });
@@ -95,7 +95,7 @@ const deleteTour = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Tour Deleted",
+    message: 'Tour Deleted',
     data: result,
   });
 });
@@ -106,7 +106,7 @@ const deleteTourType = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Tour Deleted",
+    message: 'Tour Deleted',
     data: result,
   });
 });

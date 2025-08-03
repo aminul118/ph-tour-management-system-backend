@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { v2 as cloudinary } from "cloudinary";
-import envVars from "./env";
-import AppError from "../errorHelpers/AppError";
+import { v2 as cloudinary } from 'cloudinary';
+import envVars from './env';
+import AppError from '../errorHelpers/AppError';
 
 cloudinary.config({
   cloud_name: envVars.CLOUDINARY.CLOUDINARY_NAME,
@@ -25,7 +25,7 @@ export const deleteImageFromCLoudinary = async (url: string) => {
       // console.log(`File ${public_id} is deleted from cloudinary`);
     }
   } catch (error: any) {
-    throw new AppError(401, "Cloudinary image deletion failed", error.message);
+    throw new AppError(401, 'Cloudinary image deletion failed', error.message);
   }
 };
 

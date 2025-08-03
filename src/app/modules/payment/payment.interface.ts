@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
 
 export enum PaymentStatus {
-  PAID = "PAID",
-  UNPAID = "UNPAID",
-  CANCELLED = "CANCELLED",
-  FAILED = "FAILED",
-  REFUNDED = "REFUNDED",
+  PAID = 'PAID',
+  UNPAID = 'UNPAID',
+  CANCELLED = 'CANCELLED',
+  FAILED = 'FAILED',
+  REFUNDED = 'REFUNDED',
 }
 
 export interface IPayment {

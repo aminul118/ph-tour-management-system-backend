@@ -1,6 +1,6 @@
-import multer from "multer";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
-import { cloudinaryUploads } from "./cloudinary.config";
+import multer from 'multer';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import { cloudinaryUploads } from './cloudinary.config';
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinaryUploads,
@@ -8,20 +8,20 @@ const storage = new CloudinaryStorage({
     public_id: (req, file) => {
       const fileName = file.originalname
         .toLowerCase()
-        .replace(/\s+/g, "-") // empty space remove replace with dash
-        .replace(/\./g, "-")
+        .replace(/\s+/g, '-') // empty space remove replace with dash
+        .replace(/\./g, '-')
         // eslint-disable-next-line no-useless-escape
-        .replace(/[^a-z0-9\-\.]/g, ""); // non alpha numeric - !@#$
+        .replace(/[^a-z0-9\-\.]/g, ''); // non alpha numeric - !@#$
 
-      const extension = file.originalname.split(".").pop();
+      const extension = file.originalname.split('.').pop();
 
       const uniqueFileName =
         Math.random().toString(36).substring(2) +
-        "-" +
+        '-' +
         Date.now() +
-        "-" +
+        '-' +
         fileName +
-        "." +
+        '.' +
         extension;
 
       return uniqueFileName;

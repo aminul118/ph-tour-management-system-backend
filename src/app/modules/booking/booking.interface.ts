@@ -1,10 +1,10 @@
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
 
 export enum BookingStatus {
-  PENDING = "PENDING",
-  CANCEL = "CANCEL",
-  COMPLETE = "COMPLETE",
-  FAILED = "FAILED",
+  PENDING = 'PENDING',
+  CANCEL = 'CANCEL',
+  COMPLETE = 'COMPLETE',
+  FAILED = 'FAILED',
 }
 
 export interface IBooking {

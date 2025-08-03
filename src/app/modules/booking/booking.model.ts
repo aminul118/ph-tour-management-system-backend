@@ -1,21 +1,21 @@
-import { model, Schema } from "mongoose";
-import { BookingStatus, IBooking } from "./booking.interface";
+import { model, Schema } from 'mongoose';
+import { BookingStatus, IBooking } from './booking.interface';
 
 const bookingSchema = new Schema<IBooking>(
   {
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     tour: {
       type: Schema.Types.ObjectId,
-      ref: "Tour",
+      ref: 'Tour',
       required: true,
     },
     payment: {
       type: Schema.Types.ObjectId,
-      ref: "Payment",
+      ref: 'Payment',
     },
     status: {
       type: String,
@@ -30,9 +30,9 @@ const bookingSchema = new Schema<IBooking>(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
-const Booking = model<IBooking>("Booking", bookingSchema);
+const Booking = model<IBooking>('Booking', bookingSchema);
 
 export { Booking };

@@ -1,66 +1,59 @@
-import { Router } from "express";
-import { tourController } from "./tour.controller";
-import checkAuth from "../../middlewares/checkAuth";
-import { Role } from "../user/user.interface";
-import { validateRequest } from "../../middlewares/validateRequest";
-import {
-  createTourTypeZodSchema,
-  createTourZodSchema,
-} from "./tour.validation";
-import { multerUpload } from "../../config/multer.config";
+import { Router } from 'express';
+import { tourController } from './tour.controller';
+import checkAuth from '../../middlewares/checkAuth';
+import { Role } from '../user/user.interface';
+import { validateRequest } from '../../middlewares/validateRequest';
+import { createTourTypeZodSchema, createTourZodSchema } from './tour.validation';
+import { multerUpload } from '../../config/multer.config';
 
 const router = Router();
 
 //**!-----------Tour Types Route----------- */
 
-router.get("/tour-types", tourController.getAllTourTypes);
+router.get('/tour-types', tourController.getAllTourTypes);
 
 router.post(
-  "/create-tour-types",
+  '/create-tour-types',
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   validateRequest(createTourTypeZodSchema),
-  tourController.createTourType
+  tourController.createTourType,
 );
 
 router.patch(
-  "/tour-types/:id",
+  '/tour-types/:id',
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   validateRequest(createTourTypeZodSchema),
-  tourController.updateTourType
+  tourController.updateTourType,
 );
 
 router.delete(
-  "/tour-types/:id",
+  '/tour-types/:id',
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
-  tourController.deleteTour
+  tourController.deleteTour,
 );
 
 //**!-----------Tour Route----------- */
 
-router.get("/", tourController.getAllTours);
-router.get("/:slug", tourController.getATour);
+router.get('/', tourController.getAllTours);
+router.get('/:slug', tourController.getATour);
 
 router.post(
-  "/create",
+  '/create',
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
-  multerUpload.array("files"),
+  multerUpload.array('files'),
   validateRequest(createTourZodSchema),
-  tourController.createTour
+  tourController.createTour,
 );
 
 router.patch(
-  "/:id",
+  '/:id',
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
-  multerUpload.array("files"),
+  multerUpload.array('files'),
   validateRequest(createTourZodSchema),
-  tourController.updateTour
+  tourController.updateTour,
 );
 
-router.delete(
-  "/:id",
-  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
-  tourController.deleteTour
-);
+router.delete('/:id', checkAuth(Role.ADMIN, Role.SUPER_ADMIN), tourController.deleteTour);
 
 const tourRouter = router;
 export default tourRouter;

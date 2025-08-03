@@ -1,12 +1,12 @@
-import { Router } from "express";
-import { paymentController } from "./payment.controller";
+import { Router } from 'express';
+import { paymentController } from './payment.controller';
 
 const router = Router();
 
-router.post("/init-payment/:bookingId", paymentController.initPayment);
-router.post("/success", paymentController.successPayment);
-router.post("/fail", paymentController.failPayment);
-router.post("/cancel", paymentController.cancelPayment);
+router.post('/init-payment/:bookingId', paymentController.initPayment);
+router.post('/success', paymentController.successPayment);
+router.post('/fail', paymentController.failPayment);
+router.post('/cancel', paymentController.cancelPayment);
 
 const paymentRoute = router;
 
