@@ -107,7 +107,7 @@ const googleVerifyFunction = async (
       (isUserExist.isActive === IsActive.BLOCKED || isUserExist.isActive === IsActive.INACTIVE)
     ) {
       // throw new AppError(httpStatus.BAD_REQUEST, `User is ${isUserExist.isActive}`)
-      done(`User is ${isUserExist.isActive}`);
+      return done(`User is ${isUserExist.isActive}`);
     }
 
     if (isUserExist && isUserExist.isDeleted) {
