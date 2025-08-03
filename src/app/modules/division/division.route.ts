@@ -1,34 +1,33 @@
-import { Router } from "express";
-import { divisionController } from "./division.controller";
-import checkAuth from "../../middlewares/checkAuth";
-import { Role } from "../user/user.interface";
-import { validateRequest } from "../../middlewares/validateRequest";
-import { createDivisionSchema } from "./division.validation";
+import { Router } from 'express';
+import { divisionController } from './division.controller';
+import checkAuth from '../../middlewares/checkAuth';
+import { Role } from '../user/user.interface';
+import { validateRequest } from '../../middlewares/validateRequest';
+import { createDivisionSchema } from './division.validation';
+import { multerUpload } from '../../config/multer.config';
 
 const router = Router();
 
 router.post(
-  "/create",
+  '/create',
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  multerUpload.single('file'),
   validateRequest(createDivisionSchema),
-  divisionController.createDivision
+  divisionController.createDivision,
 );
 
-router.get("", divisionController.getAllDivisions);
-router.get("/:slug", divisionController.getSingleDivision);
+router.get('', divisionController.getAllDivisions);
+router.get('/:slug', divisionController.getSingleDivision);
 
 router.patch(
-  "/:id",
+  '/:id',
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  multerUpload.single('file'),
   validateRequest(createDivisionSchema),
-  divisionController.updateDivision
+  divisionController.updateDivision,
 );
 
-router.delete(
-  "/:id",
-  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
-  divisionController.deleteDivision
-);
+router.delete('/:id', checkAuth(Role.ADMIN, Role.SUPER_ADMIN), divisionController.deleteDivision);
 
 const divisionRouter = router;
 export default divisionRouter;

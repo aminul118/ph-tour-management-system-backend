@@ -1,28 +1,40 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextFunction, Request, Response } from "express";
-import AppError from "../errorHelpers/AppError";
-import { handleCastError } from "../helpers/handleCastError";
-import { handlerValidationError } from "../helpers/handlerValidationError";
-import { handlerZodError } from "../helpers/handlerZodError";
-import { TErrorSources } from "../interfaces/error.types";
-import envVars from "../config/env";
-import { handlerDuplicateError } from "../helpers/handlerDuplicateError";
+import { NextFunction, Request, Response } from 'express';
+import AppError from '../errorHelpers/AppError';
+import { handleCastError } from '../helpers/handleCastError';
+import { handlerValidationError } from '../helpers/handlerValidationError';
+import { handlerZodError } from '../helpers/handlerZodError';
+import { TErrorSources } from '../interfaces/error.types';
+import envVars from '../config/env';
+import { handlerDuplicateError } from '../helpers/handlerDuplicateError';
+import { deleteImageFromCLoudinary } from '../config/cloudinary.config';
 
-export const globalErrorHandler = (
+export const globalErrorHandler = async (
   err: any,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
-  if (envVars.NODE_ENV === "development") {
+  if (envVars.NODE_ENV === 'development') {
     console.log(err);
+  }
+
+  // console.log({ file: req.files });
+  if (req.file) {
+    await deleteImageFromCLoudinary(req.file.path);
+  }
+
+  if (req.files && Array.isArray(req.files) && req.files.length) {
+    const imageUrls = (req.files as Express.Multer.File[]).map((file) => file.path);
+
+    await Promise.all(imageUrls.map((url) => deleteImageFromCLoudinary(url)));
   }
 
   let errorSources: TErrorSources[] = [];
   let statusCode = 500;
-  let message = "Something Went Wrong!!";
+  let message = 'Something Went Wrong!!';
 
   //Duplicate error
   if (err.code === 11000) {
@@ -32,14 +44,14 @@ export const globalErrorHandler = (
   }
 
   // Object ID error / Cast Error
-  else if (err.name === "CastError") {
+  else if (err.name === 'CastError') {
     const simplifiedError = handleCastError(err);
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
   }
 
   // Zod Error
-  else if (err.name === "ZodError") {
+  else if (err.name === 'ZodError') {
     const simplifiedError = handlerZodError(err);
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
@@ -47,7 +59,7 @@ export const globalErrorHandler = (
   }
 
   //Mongoose Validation Error
-  else if (err.name === "ValidationError") {
+  else if (err.name === 'ValidationError') {
     const simplifiedError = handlerValidationError(err);
     statusCode = simplifiedError.statusCode;
     errorSources = simplifiedError.errorSources as TErrorSources[];
@@ -67,7 +79,7 @@ export const globalErrorHandler = (
     success: false,
     message,
     errorSources,
-    err: envVars.NODE_ENV === "development" ? err : null,
-    stack: envVars.NODE_ENV === "development" ? err.stack : null,
+    err: envVars.NODE_ENV === 'development' ? err : null,
+    stack: envVars.NODE_ENV === 'development' ? err.stack : null,
   });
 };
