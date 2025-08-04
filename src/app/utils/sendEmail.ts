@@ -2,18 +2,17 @@
 import ejs from 'ejs';
 import nodemailer from 'nodemailer';
 import path from 'path';
-
 import AppError from '../errorHelpers/AppError';
 import envVars from '../config/env';
 
 const transporter = nodemailer.createTransport({
+  host: envVars.EMAIL_SENDER.SMTP_HOST,
+  port: envVars.EMAIL_SENDER.SMTP_PORT,
   secure: true,
   auth: {
     user: envVars.EMAIL_SENDER.SMTP_USER,
     pass: envVars.EMAIL_SENDER.SMTP_PASS,
   },
-  port: Number(envVars.EMAIL_SENDER.SMTP_PORT),
-  host: envVars.EMAIL_SENDER.SMTP_HOST,
 });
 
 interface SendEmailOptions {
@@ -38,11 +37,13 @@ const sendEmail = async ({
   try {
     const templatePath = path.join(__dirname, `templates/${templateName}.ejs`);
     const html = await ejs.renderFile(templatePath, templateData);
+
+    //  Collect data from function's params and send email
     const info = await transporter.sendMail({
       from: envVars.EMAIL_SENDER.SMTP_FORM,
-      to: to,
-      subject: subject,
-      html: html,
+      to,
+      subject,
+      html,
       attachments: attachments?.map((attachment) => ({
         filename: attachment.filename,
         content: attachment.content,
